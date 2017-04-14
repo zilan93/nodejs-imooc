@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Promise animation</title>
+	<script type="text/javascript" src="./node_modules/bluebird/js/browser/bluebird.js"></script>
+	<style type="text/css">
+		.ball{width:40px;height:40px;border-radius: 20px;}
+		.ball1{background-color: red;}
+		.ball2{background-color: green;}
+		.ball3{background-color: yellow;}
+	</style>
+</head>
+<body>
+	<div class="ball ball1" style="margin-left: 0;"></div>
+	<div class="ball ball2" style="margin-left: 0;"></div>
+	<div class="ball ball3" style="margin-left: 0;"></div>	
+	<script type="text/javascript">
+		var Promise = window.Promise;
+		function promiseAni(ball,distance) {
+			return new Promise(function(resolve,reject) {
+				function _animate() {
+					//通过改变margin-left,将ball的位置移动到指定位置
+					setTimeout(function() {
+						var marginLeft = parseInt(ball.style.marginLeft,10);
+						console.log(marginLeft);
+						if(marginLeft === distance) {
+							resolve();
+						} else if(marginLeft > distance) {
+							marginLeft--;
+						} else {
+							marginLeft++;
+						}
+						ball.style.marginLeft = marginLeft + "px";
+						_animate();
+					},13)
+				}
+				_animate();
+			})
+		}
+		var ball1 = document.querySelector(".ball1");
+		var ball2 = document.querySelector(".ball2");
+		var ball3 = document.querySelector(".ball3");
+		promiseAni(ball1,100)
+		.then(function() {
+			return promiseAni(ball2,200);
+		})
+		.then(function() {
+			return promiseAni(ball3,300);
+		})
+		.then(function() {
+			return promiseAni(ball3,450);
+		})
+		.then(function() {
+			return promiseAni(ball2,150);
+		})
+		.then(function() {
+			return promiseAni(ball1,150);
+		})
+	</script>
+</body>
+</html>
